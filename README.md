@@ -19,13 +19,15 @@ What quantum-based business ideas will arise?
 - `src/`: reusable utilities shared across experiments.
 - `results/`: generated figures and processed data.
 - `tests/`: temporary folder holding tests. 
+- `website/`: website for displaying tools. 
 
 ## How to navigate
-1. Start with `finialize/` to play around with the various tools created.
-2. Track momentum in `docs/research-log/`.
-3. Read `docs/` for evidence of study and a deeper look into the creation process.
-4. Use `src/` to see useful code.
-5. Find outputs in `results/figures` and `results/data`.
+1. Start with `website/` to play around with the various tools created.
+2. Go to `finialize/` to further analyze projects
+3. Track momentum in `docs/research-log/`.
+4. Read `docs/` for evidence of study and a deeper look into the creation process.
+5. Use `src/` to see useful code.
+6. Find outputs in `results/figures` and `results/data`.
 
 ## Directory Map
 ```text
@@ -40,5 +42,6 @@ quantum-structural-limits/
 ├──────results/figures/
 ├──────results/data/
 ├── src/
-└── tests/
+├── tests/
+└── website/
 ```
