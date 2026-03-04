@@ -1,87 +1,44 @@
-# Quantum Structural Limits
+# Owen Lee's Research+Learning Repo
 
-A research-driven investigation of the structural constraints that define quantum information.
+A catch-all repository made for the sole purpose of organizing my research and progress.
 
-This repository reconstructs and tests foundational operational limits — including no-cloning, entanglement monogamy, channel degradability, capacity collapse, error correction, and information geometry — through formal analysis and reproducible computational experiments.
+## What is this project?
+This long-term project is a culmination of everything I've learnt including notes, achievements, failures, and other tools/thingymajigs I decide to build. 
 
-The goal is not novelty.  
-The goal is disciplined reconstruction, structured experimentation, and conceptual synthesis.
+## What questions serve as the motivation?
+How does quantum information work both intuitively and mathematically?
+How will quantum computing affect the future landscape?
+What quantum-based business ideas will arise?
 
----
+## Pillars
+- `in-progess/`: projects that are in the early-developmental stage, not deemed ready for use.
+- `finalized/`: finished projects. 
+- `docs/`: includes all documentation of workflow, evidence of study, and planning for projects
+    `docs/research-log`: logs research process for projects on a weekly basis.
+    `docs/initial-study`: holds all evidence of study for projects. Labeling (DD/MM/YY-ProjectName-Topic)
+- `src/`: reusable utilities shared across experiments.
+- `results/`: generated figures and processed data.
+- `tests/`: temporary folder holding tests. 
 
-## Motivation
+## How to navigate
+1. Start with `finialize/` to play around with the various tools created.
+2. Track momentum in `docs/research-log/`.
+3. Read `docs/` for evidence of study and a deeper look into the creation process.
+4. Use `src/` to see useful code.
+5. Find outputs in `results/figures` and `results/data`.
 
-Quantum information is defined as much by what cannot be done to it as by what can.
-
-Unlike classical information, quantum states:
-
-- cannot be copied,
-- cannot be broadcast,
-- cannot be freely shared,
-- and cannot survive arbitrary noise.
-
-These constraints are not engineering limitations; they are structural features of the theory. This project studies those features operationally and computationally, with an emphasis on understanding how limits shape the architecture of quantum computation.
-
----
-
-## Core Questions
-
-This repository is organized around the following guiding questions:
-
-- What does it operationally mean to “copy” a quantum state?
-- Why does entanglement obey strict monogamy constraints?
-- How do degradability and capacity collapse enforce non-duplicability?
-- How does quantum error correction protect information without violating no-cloning?
-- Can geometric quantities (e.g., Quantum Fisher Information) predict fragility under noise?
-
-Each question is explored both formally (derivations, theoretical notes) and computationally (simulations, reproducible experiments, benchmarked results).
-
----
-
-## Aspects of Investigation
-
-### 1. No-Cloning and Access Structure  
-Operational definitions of cloning, approximate cloning bounds, and the role of degradable/antidegradable channels.
-
-### 2. Entanglement Monogamy  
-Numerical verification of monogamy inequalities and visualization of correlation trade-offs.
-
-### 3. Error Correction vs Duplication  
-Logical encoding, stabilizer structure, and how redundancy differs fundamentally from copying.
-
-### 4. Information Geometry and Fragility  
-Quantum Fisher Information, distinguishability metrics, and robustness under noise.
-
----
-
-## Methodology
-
-- Reconstruct known results from first principles.
-- Verify structural limits numerically.
-- Compare across small systems where exact simulation is possible.
-- Maintain reproducibility and explicit assumptions.
-- Separate formal derivation from interpretation.
-
-All experiments are designed to be small-scale, transparent, and extensible.
-
----
-
-## Philosophy of the Project
-
-This repository does not treat philosophy as speculative metaphysics.  
-Instead, philosophical questions arise downstream of formal results.
-
-When quantum information refuses duplication, collapses under certain channels, or survives only through encoded structure, the question is not merely “how,” but “what kind of entity behaves this way?”
-
-Operational limits provide the entry point.
-
----
-
-## Status
-
-This is a long-term, cumulative investigation.  
-Work progresses through milestone-based experiments and structured theory notes.
-
-See `research_log/` for current progress and next objectives.
-
----
+## Directory Map
+```text
+quantum-structural-limits/
+├── README.md
+├── docs/
+├──────docs/initial-study/
+├──────docs/research-log/
+├── finalized/
+├── in-progress/
+├── results/
+├──────results/figures/
+├──────results/data/
+├── src/
+└── tests/
+```
