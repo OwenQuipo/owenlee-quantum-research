@@ -1,0 +1,16 @@
+{
+  "name": "quantum-research-website",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite website",
+    "build": "vite build website",
+    "preview": "vite preview website"
+  },
+  "devDependencies": {
+    "vite": "^7.1.5"
+  },
+  "dependencies": {
+    "three": "^0.183.2"
+  }
+}
