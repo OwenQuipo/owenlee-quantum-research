@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Qubit Circuit Builder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <script type="module" crossorigin src="/assets/qubitCircuitBuilder-CrQ6hgmF.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
+    <link rel="stylesheet" crossorigin href="/assets/qubitCircuitBuilder-DLaOsL5Z.css">
+  </head>
+  <body>
+    <main class="simple-page">
+      <a class="simple-page__back" href="../../index.html?view=menu">back</a>
+      <h1 class="simple-page__title">Qubit Circuit Builder</h1>
+      <section class="builder" aria-label="Qubit circuit builder">
+        <div class="code-shell" data-code-shell>
+          <div class="code-shell__toolbar">
+            <div class="code-shell__dots" aria-hidden="true">
+              <span class="code-editor__dot"></span>
+              <span class="code-editor__dot"></span>
+              <span class="code-editor__dot"></span>
+            </div>
+            <div class="builder__tabs" role="tablist" aria-label="Qubit circuit builder views">
+              <button
+                id="tab-code"
+                class="builder__tab"
+                type="button"
+                role="tab"
+                aria-selected="true"
+                aria-controls="panel-code"
+                data-tab-trigger
+              >
+                Qiskit
+              </button>
+              <button
+                id="tab-openqasm"
+                class="builder__tab"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                aria-controls="panel-openqasm"
+                tabindex="-1"
+                data-tab-trigger
+              >
+                OpenQASM
+              </button>
+            </div>
+            <button
+              class="code-shell__toggle"
+              type="button"
+              aria-expanded="true"
+              aria-controls="code-shell-body"
+              data-shell-toggle
+            >
+              Minimize
+            </button>
+          </div>
+
+          <div class="code-shell__body" id="code-shell-body">
+            <section
+              id="panel-code"
+              class="builder__panel"
+              role="tabpanel"
+              aria-labelledby="tab-code"
+              data-tab-panel
+            >
+              <div class="code-editor" data-code-editor>
+                <div class="code-editor__body">
+                  <div class="code-editor__lines" aria-hidden="true" data-line-numbers>1</div>
+                  <label class="code-editor__input-wrap" for="circuit-code">
+                    <span class="sr-only">Circuit code editor</span>
+                    <pre class="code-editor__highlight" aria-hidden="true"><code data-code-highlight></code></pre>
+                    <textarea
+                      id="circuit-code"
+                      class="code-editor__input"
+                      name="circuit-code"
+                      spellcheck="false"
+                      autocomplete="off"
+                      autocapitalize="off"
+                      wrap="off"
+                      data-code-input
+                    >from qiskit import QuantumCircuit
+
+qc = QuantumCircuit(2, 2)
+qc.h(0)
+qc.cx(0, 1)
+qc.measure([0, 1], [0, 1])
+
+print(qc.draw())</textarea>
+                  </label>
+                </div>
+              </div>
+            </section>
+
+            <section
+              id="panel-openqasm"
+              class="builder__panel"
+              role="tabpanel"
+              aria-labelledby="tab-openqasm"
+              hidden
+              data-tab-panel
+            >
+              <div class="code-editor" data-code-editor>
+                <div class="code-editor__body">
+                  <div class="code-editor__lines" aria-hidden="true" data-line-numbers>1</div>
+                  <label class="code-editor__input-wrap" for="circuit-openqasm">
+                    <span class="sr-only">OpenQASM code editor</span>
+                    <pre class="code-editor__highlight" aria-hidden="true"><code data-code-highlight></code></pre>
+                    <textarea
+                      id="circuit-openqasm"
+                      class="code-editor__input"
+                      name="circuit-openqasm"
+                      spellcheck="false"
+                      autocomplete="off"
+                      autocapitalize="off"
+                      wrap="off"
+                      data-code-input
+                    >OPENQASM 2.0;
+include "qelib1.inc";
+
+qreg q[2];
+creg c[2];
+h q[0];
+cx q[0], q[1];
+measure q[0] -> c[0];
+measure q[1] -> c[1];</textarea>
+                  </label>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <div class="builder__spacer" aria-hidden="true"></div>
+      </section>
+    </main>
+
+  </body>
+</html>

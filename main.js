@@ -21,9 +21,7 @@ if (sceneHost) {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(32, window.innerWidth / window.innerHeight, 0.1, 100);
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-  const textureLoader = new THREE.TextureLoader();
   const pointer = new THREE.Vector2();
-  const roomTextureUrl = new URL("./landing page/thumbnails/intro.jpg", import.meta.url);
 
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -72,16 +70,6 @@ if (sceneHost) {
   shadow.scale.set(1.55, 0.42, 1);
   shadow.position.set(0, -2.05, -0.2);
   group.add(shadow);
-
-  textureLoader.load(roomTextureUrl.href, (texture) => {
-    texture.colorSpace = THREE.SRGBColorSpace;
-    texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
-    roomMaterial.map = texture;
-    roomMaterial.needsUpdate = true;
-
-    const aspect = texture.image.width / texture.image.height;
-    roomPlane.scale.set(aspect, 1, 1);
-  });
 
   const resizeScene = () => {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -242,7 +230,7 @@ if (hero && menu) {
   const menuItems = [...menu.querySelectorAll("[data-menu-item]")];
   const menuDescriptionPopup = menu.querySelector("[data-menu-description-popup]");
   const menuClose = menu.querySelector("[data-menu-close]");
-  const clickSound = new Audio(new URL("./click.wav", import.meta.url).href);
+  const clickSound = new Audio("/media/audio/click.wav");
   let activeIndex = 0;
   let isMenuOpen = false;
   let isAboutActive = false;
