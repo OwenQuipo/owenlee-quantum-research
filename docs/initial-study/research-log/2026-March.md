@@ -6,7 +6,7 @@ MIT OCW 18.01 Lectures 6-7
 Setting up research repository
 #### Wednesday
 MIT OCW 18.01 Exam 1, Lectures 8-9
-**Decided on a new project idea: Optimization Landscapes of Quantum Algorithms (OLQA)**
+**Project Start: Re-creating Quantum Circuit Visualizer for Website**
 #### Thursday
 Educated myself on OLQA.
 MIT OCW 18.01 Lecture 10
@@ -22,3 +22,7 @@ Rest
 MIT OCW 18.01 Lecture 16,22
 Studying for summatives
 Portfolio work
+#### Tuesday 
+**Pivot: Quantum code -> Circuit visualizer**
+Studied Nielsen and Chuang. 
+
