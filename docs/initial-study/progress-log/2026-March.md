@@ -24,5 +24,16 @@ Studying for summatives
 Portfolio work
 #### Tuesday 
 **Pivot: Quantum code -> Circuit visualizer**
-Studied Nielsen and Chuang. 
-
+begun Nielsen and Chuang (1.1 - 1.5). 
+Begun MIT OCW 18.02 lectures 1-2
+#### Wednesday
+MIT OCW 18.02 lectures 3-4
+#### Thursday
+MIT OCW 18.02 lectures 5-6
+Nielsen and Chuang (1.6 - 2.0)
+#### Friday
+Added Circuit visualization in project
+Nielsen & Chuang (2.0 - 2.5)
+#### Saturday 
+Cleaning up circuit visualization functionalities. (*might add a description later*)
+Nielsen and Chuang (2.5 - )

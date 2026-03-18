@@ -14,17 +14,16 @@ What quantum-based business ideas will arise?
 - `in-progess/`: projects that are in the early-developmental stage, not deemed ready for use.
 - `finalized/`: finished projects. 
 - `docs/`: includes all documentation of workflow, evidence of study, and planning for projects
-    `docs/research-log`: logs research process for projects on a weekly basis.
+    `docs/progress-log`: logs research process for projects on a weekly basis.
     `docs/initial-study`: holds all evidence of study for projects. Labeling (DD/MM/YY-ProjectName-Topic)
 - `src/`: reusable utilities shared across experiments.
 - `results/`: generated figures and processed data.
 - `tests/`: temporary folder holding tests. 
-- `website/`: website for displaying tools. 
 
 ## How to navigate
-1. Start with `website/` to play around with the various tools created.
+1. Start with the website to play around with the various tools created.
 2. Go to `finialize/` to further analyze projects
-3. Track momentum in `docs/research-log/`.
+3. Track momentum in `docs/progress-log/`.
 4. Read `docs/` for evidence of study and a deeper look into the creation process.
 5. Use `src/` to see useful code.
 6. Find outputs in `results/figures` and `results/data`.
@@ -35,13 +34,12 @@ quantum-structural-limits/
 ├── README.md
 ├── docs/
 ├──────docs/initial-study/
-├──────docs/research-log/
+├──────docs/progress-log/
 ├── finalized/
 ├── in-progress/
 ├── results/
 ├──────results/figures/
 ├──────results/data/
 ├── src/
-├── tests/
-└── website/
+└── tests/
 ```
