@@ -9,7 +9,9 @@ const exampleButtons = [...document.querySelectorAll("[data-example]")];
 const circuitCanvas = document.querySelector("[data-circuit-canvas]");
 const circuitEmpty = document.querySelector("[data-circuit-empty]");
 const circuitSummary = document.querySelector("[data-circuit-summary]");
+const mathJaxScript = document.querySelector("script[data-mathjax]");
 const measurementIconHref = new URL("./measurement icon.png", import.meta.url).href;
+const svgNamespace = "http://www.w3.org/2000/svg";
 const circuitPreviewState = {
   svg: null,
   intrinsicWidth: 0,
@@ -23,6 +25,31 @@ const circuitPreviewState = {
   lastDragPoint: null,
   pinchGesture: null,
 };
+const mathJaxReady = new Promise((resolve) => {
+  const finalize = () => {
+    if (window.MathJax?.startup?.promise) {
+      window.MathJax.startup.promise
+        .then(() => resolve(window.MathJax))
+        .catch(() => resolve(null));
+      return;
+    }
+
+    resolve(null);
+  };
+
+  if (window.MathJax?.startup?.promise) {
+    finalize();
+    return;
+  }
+
+  if (!mathJaxScript) {
+    resolve(null);
+    return;
+  }
+
+  mathJaxScript.addEventListener("load", finalize, { once: true });
+  mathJaxScript.addEventListener("error", () => resolve(null), { once: true });
+});
 const exampleCircuits = {
   teleportation: `from qiskit import QuantumCircuit
 
@@ -1105,6 +1132,143 @@ const escapeAttribute = (value) =>
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;");
 
+const escapeLatexText = (value) =>
+  String(value).replaceAll(/([\\{}$&#^_%~])/g, "\\$1");
+
+const latexSymbolMap = new Map([
+  ["alpha", "\\alpha"],
+  ["beta", "\\beta"],
+  ["gamma", "\\gamma"],
+  ["delta", "\\delta"],
+  ["epsilon", "\\epsilon"],
+  ["theta", "\\theta"],
+  ["lambda", "\\lambda"],
+  ["mu", "\\mu"],
+  ["nu", "\\nu"],
+  ["phi", "\\phi"],
+  ["pi", "\\pi"],
+  ["tau", "\\tau"],
+  ["omega", "\\omega"],
+  ["Alpha", "A"],
+  ["Beta", "B"],
+  ["Gamma", "\\Gamma"],
+  ["Delta", "\\Delta"],
+  ["Theta", "\\Theta"],
+  ["Lambda", "\\Lambda"],
+  ["Phi", "\\Phi"],
+  ["Pi", "\\Pi"],
+  ["Omega", "\\Omega"],
+  ["θ", "\\theta"],
+  ["Θ", "\\Theta"],
+  ["ϕ", "\\phi"],
+  ["φ", "\\phi"],
+  ["Φ", "\\Phi"],
+  ["π", "\\pi"],
+  ["Π", "\\Pi"],
+]);
+
+const formatLatexExpression = (value) =>
+  String(value)
+    .replaceAll(/([A-Za-z\u0370-\u03FF]+|[θΘϕφΦπΠ])/g, (token) => latexSymbolMap.get(token) ?? token)
+    .replaceAll("*", " \\cdot ")
+    .replaceAll("/", " / ");
+
+const buildLatexGateLabel = (label) => {
+  const normalizedLabel = String(label).trim();
+  const gateWithArgsMatch = normalizedLabel.match(/^([A-Za-z0-9]+)\((.*)\)$/);
+
+  if (!gateWithArgsMatch) {
+    return `\\mathrm{${escapeLatexText(normalizedLabel)}}`;
+  }
+
+  const gateName = escapeLatexText(gateWithArgsMatch[1]);
+  const params = formatLatexExpression(gateWithArgsMatch[2].trim());
+
+  return `\\mathrm{${gateName}}\\left(${params}\\right)`;
+};
+
+const renderLatexGateLabel = ({ x, y, label, fontSize, fill }) => {
+  const safeLabel = escapeAttribute(label);
+  const safeTex = escapeAttribute(buildLatexGateLabel(label));
+
+  return [
+    `<g class="circuit-gate-label" data-latex-label="true" data-tex="${safeTex}" data-x="${x}" data-y="${y}" data-font-size="${fontSize}" data-fill="${escapeAttribute(fill)}">`,
+    `<text x="${x}" y="${y + 5}" text-anchor="middle" fill="${escapeAttribute(fill)}" font-size="${fontSize}">${safeLabel}</text>`,
+    `</g>`,
+  ].join("");
+};
+
+const parseViewBox = (value) => {
+  const parts = String(value)
+    .trim()
+    .split(/\s+/)
+    .map((part) => Number.parseFloat(part));
+
+  return parts.length === 4 && parts.every((part) => Number.isFinite(part)) ? parts : null;
+};
+
+const renderLatexLabelsInPreview = async () => {
+  const mathJax = await mathJaxReady;
+
+  if (!mathJax || !circuitCanvas) {
+    return;
+  }
+
+  const labelGroups = [...circuitCanvas.querySelectorAll("[data-latex-label='true']")];
+
+  labelGroups.forEach((group) => {
+    if (group.dataset.latexRendered === "true") {
+      return;
+    }
+
+    const tex = group.dataset.tex ?? "";
+    const x = Number.parseFloat(group.dataset.x ?? "0");
+    const y = Number.parseFloat(group.dataset.y ?? "0");
+    const fontSize = Number.parseFloat(group.dataset.fontSize ?? "12");
+    const fill = group.dataset.fill ?? "currentColor";
+
+    if (!tex) {
+      return;
+    }
+
+    let rendered;
+
+    try {
+      rendered = mathJax.tex2svg(tex, { display: false });
+    } catch {
+      return;
+    }
+
+    const mathSvg = rendered.querySelector("svg");
+    const viewBox = parseViewBox(mathSvg?.getAttribute("viewBox") ?? "");
+
+    if (!mathSvg || !viewBox) {
+      return;
+    }
+
+    const [minX, minY, width, height] = viewBox;
+    const scale = (fontSize * 1.45) / Math.max(height, 1);
+    const defs = [...mathSvg.querySelectorAll(":scope > defs")].map((node) => document.importNode(node, true));
+    const children = [...mathSvg.childNodes]
+      .filter((node) => node.nodeName.toLowerCase() !== "defs")
+      .map((node) => document.importNode(node, true));
+    const wrapper = document.createElementNS(svgNamespace, "g");
+
+    wrapper.setAttribute(
+      "transform",
+      `translate(${x} ${y}) scale(${scale}) translate(${-minX - width / 2} ${-minY - height / 2})`,
+    );
+
+    children.forEach((node) => wrapper.appendChild(node));
+
+    group.replaceChildren(...defs, wrapper);
+    group.setAttribute("fill", fill);
+    group.setAttribute("stroke", fill);
+    group.style.color = fill;
+    group.dataset.latexRendered = "true";
+  });
+};
+
 const renderCircuitSvg = (circuit) => {
   const palette = {
     background: "rgba(255,255,255,0)",
@@ -1168,11 +1332,11 @@ const renderCircuitSvg = (circuit) => {
 
     if (op.type === "single") {
       const y = qubitYs[op.target];
-      const label = escapeAttribute(op.label ?? op.gate.toUpperCase());
+      const label = op.label ?? op.gate.toUpperCase();
 
       fragments.push(
         `<rect x="${x - halfGate}" y="${y - halfGate}" width="${gateSize}" height="${gateSize}" fill="${palette.gateFill}" stroke="${palette.stroke}" stroke-width="1.5"/>`,
-        `<text class="circuit-gate-label" x="${x}" y="${y + 5}" text-anchor="middle" fill="${palette.gateText}" font-size="${gateLabelSize}">${label}</text>`,
+        renderLatexGateLabel({ x, y, label, fontSize: gateLabelSize, fill: palette.gateText }),
       );
       return;
     }
@@ -1182,7 +1346,7 @@ const renderCircuitSvg = (circuit) => {
       const targetY = qubitYs[op.target];
       const topY = Math.min(...controlYs, targetY);
       const bottomY = Math.max(...controlYs, targetY);
-      const label = escapeAttribute(op.label);
+      const label = op.label;
 
       fragments.push(`<line x1="${x}" y1="${topY}" x2="${x}" y2="${bottomY}" stroke="${palette.stroke}" stroke-width="${compactStroke}"/>`);
 
@@ -1203,7 +1367,13 @@ const renderCircuitSvg = (circuit) => {
 
       fragments.push(
         `<rect x="${x - halfGate}" y="${targetY - halfGate}" width="${gateSize}" height="${gateSize}" fill="${palette.gateFillStrong}" stroke="${palette.stroke}" stroke-width="1.5"/>`,
-        `<text class="circuit-gate-label" x="${x}" y="${targetY + 5}" text-anchor="middle" fill="${palette.gateText}" font-size="${Math.max(10, gateLabelSize - 1)}">${label}</text>`,
+        renderLatexGateLabel({
+          x,
+          y: targetY,
+          label,
+          fontSize: Math.max(10, gateLabelSize - 1),
+          fill: palette.gateText,
+        }),
       );
       return;
     }
@@ -1212,11 +1382,17 @@ const renderCircuitSvg = (circuit) => {
       const topY = qubitYs[Math.min(...op.targets)];
       const bottomY = qubitYs[Math.max(...op.targets)];
       const boxHeight = Math.max(bottomY - topY + 44, 44);
-      const label = escapeAttribute(op.label);
+      const label = op.label;
 
       fragments.push(
         `<rect x="${x - 24}" y="${topY - 22}" width="48" height="${boxHeight}" fill="${palette.gateFillStrong}" stroke="${palette.stroke}" stroke-width="1.5"/>`,
-        `<text class="circuit-gate-label" x="${x}" y="${topY - 22 + boxHeight / 2 + 5}" text-anchor="middle" fill="${palette.gateText}" font-size="${Math.max(10, gateLabelSize - 1)}">${label}</text>`,
+        renderLatexGateLabel({
+          x,
+          y: topY - 22 + boxHeight / 2,
+          label,
+          fontSize: Math.max(10, gateLabelSize - 1),
+          fill: palette.gateText,
+        }),
       );
       return;
     }
@@ -1545,7 +1721,9 @@ function updateCircuitPreview() {
 
   circuitCanvas.innerHTML = renderCircuitSvg(circuit);
   circuitEmpty.hidden = true;
+  circuitEmpty.textContent = "";
   circuitSummary.textContent = `${buildCircuitSummary(circuit)}. Pinch to zoom.`;
+  renderLatexLabelsInPreview();
   syncCircuitPreviewViewport();
 }
 

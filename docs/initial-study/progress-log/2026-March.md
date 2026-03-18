@@ -37,3 +37,15 @@ Nielsen & Chuang (2.0 - 2.5)
 #### Saturday 
 Cleaning up circuit visualization functionalities. (*might add a description later*)
 Nielsen and Chuang (2.5 - )
+
+# March 16th - March 21st
+#### Monday
+Nielsen & Chuang
+Worked on planning for visualization project UI
+#### Tuesday 
+Too busy with schoowork
+Planned a bit more for UI
+#### Wenesday
+Huge project overhaul
+Added planned UI
+Made operations run smoother
